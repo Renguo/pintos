@@ -613,7 +613,7 @@ sys_chdir (const char *udir)
 
   // ADD CODE HERE  
   char *kdir = copy_in_string(udir);
-  ok = filesys_chdir(kdir);
+  filesys_chdir(kdir);
   palloc_free_page(kdir);
 
   return ok;

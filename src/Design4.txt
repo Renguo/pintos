@@ -1,0 +1,96 @@
+		           +---------------------------+
+       	           |         CIS 520           |
+		           | PROJECT 4: File System    |
+		           |     DESIGN DOCUMENT       |
+		           +---------------------------+
+
+---- GROUP ----
+
+>> Fill in the names of your group members.
+
+Samuel Griggs
+Matt Hudson
+Brian Stinson
+
+---- PRELIMINARIES ----
+
+>> If you have any preliminary comments on your submission, notes for the
+>> TAs, or extra credit, please give them here.
+
+>> Please cite any offline or online sources you consulted while
+>> preparing your submission, other than the Pintos documentation, course
+>> text, lecture notes, and course staff.
+
+---- DATA STRUCTURES ----
+
+>> A1: Copy here the declaration of each new or changed `struct' or
+>> `struct' member, global or static variable, `typedef', or
+>> enumeration.  Identify the purpose of each in 25 words or less.
+
+We used Dr. Nielsen's reference solution, in this implementation, the dir and
+dir_entry structs describe the directories and the inodes they point to, as well
+as the header information and the name of the directory. These also include a
+flag to let us know if the directory is currently in use. 
+
+>> A2: What is the maximum size of a file supported by the inode
+>> structure?  Show your work.
+
+An inode is BLOCK_SECTOR_SIZE (512) bytes long and there are 125 possible
+Sectors for each file, so each file has a max size of 64,000 bytes.
+
+---- DIRECTORIES and SUBDIRECTORIES ----
+
+>> A3: How do you prevent races on directory entries?  For example,
+>> only one of two simultaneous attempts to remove a single file
+>> should succeed, as should only one of two simultaneous attempts to
+>> create a file with the same name, and so on.
+
+We check the in_use flag on a directory or the open_cnt on a file inode to be
+sure that we are not freeing an open file. The directory structure is searched
+starting at the base to check to be sure we are not creating a file/dir with an
+already existing name. 
+
+>> A4: Does your implementation allow a directory to be removed if it
+>> is open by a process or if it is in use as a process's current
+>> working directory?  If so, what happens to that process's future
+>> file system operations?  If not, how do you prevent it?
+
+This implementation does not allow open files to be de-allocated. The directory
+remove code checks the open_cnt and the in_use flag to be sure that we are not
+removing the current directory or a directory that is currently in use. 
+
+			   SURVEY QUESTIONS
+			   ================
+
+Answering these questions is optional, but it will help us improve the
+course in future quarters.  Feel free to tell us anything you
+want--these questions are just to spur your thoughts.  You may also
+choose to respond anonymously in the course evaluations at the end of
+the quarter.
+
+>> In your opinion, was this assignment, or any one of the three problems
+>> in it, too easy or too hard?  Did it take too long or too little time?
+
+This assignment was fairly easy. The example starter code made this project much
+simpler.
+
+>> Did you find that working on a particular part of the assignment gave
+>> you greater insight into some aspect of OS design?
+
+Working with inodes vs. filehandles vs. physical blocks was a good way to see
+how files in general, and particularly memory mapped files work in the context
+of the operating system. Directories and files/memory mapped files are very
+similar but differ in nuanced ways that were apparent in this project.
+
+>> Is there some particular fact or hint we should give students in
+>> future quarters to help them solve the problems?  Conversely, did you
+>> find any of our guidance to be misleading?
+
+Get started soon!
+
+>> Do you have any suggestions for the TAs to more effectively assist
+>> students, either for future quarters or the remaining projects?
+
+No suggestions.
+
+>> Any other comments?

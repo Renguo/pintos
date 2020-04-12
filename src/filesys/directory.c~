@@ -226,22 +226,10 @@ dir_remove (struct dir *dir, const char *name)
   ASSERT (name != NULL);
 
   /* Don't allow . or .. to be removed */
-  /* dot = filesys_open(".");
-  if(inode_get_inumber(dot) == inode_get_inumber(dir->inode)){
-      //printf("[DEBUG] FILE: %s is on the same inode as .\n");
-      inode_close(dot);
-      return success;
-  }
-  dotdot = filesys_open("..");
-  if(inode_get_inumber(dotdot) == inode_get_inumber(dir->inode)){
-      //printf("[DEBUG] A: %d DOTDOT: %d\n", inode_get_inumber(dir->inode), inode_get_inumber(dotdot));
-      inode_close(dot);
-      return success;
-  } */
 
-  if(strcmp(name, ".") == 0 || strcmp(name, "..") == 0){
+  // ADD CODE HERE
+  if(strcmp(name, ".") || strcmp(name, ".."))
     return success;
-  }
 
   /* Find directory entry. */
   inode_lock (dir->inode);
@@ -250,11 +238,12 @@ dir_remove (struct dir *dir, const char *name)
 
   /* Open inode. */
   inode = inode_open (e.inode_sector);
-
   if (inode == NULL)
     goto done;
 
   /* Verify that it is not an in-use or non-empty directory. */
+
+  // ADD CODE HERE
   if(inode_get_type(inode) == DIR_INODE)//check if actually a directory
   {
     if(inode_open_cnt(inode) > 1)
@@ -268,14 +257,13 @@ dir_remove (struct dir *dir, const char *name)
       }
     }
     if(count > 2)
-        goto done;
+	goto done;
   }
 
   /* Erase directory entry. */
   e.in_use = false;
   if (inode_write_at (dir->inode, &e, sizeof e, ofs) != sizeof e) 
     goto done;
-
 
   /* Remove inode. */
   inode_remove (inode);
